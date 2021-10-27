@@ -1,0 +1,111 @@
+/** Implements a Ghost. */
+class Ghost {
+    field int x, y; // screen location of the pacman's top-left corner
+    field char direction;
+
+    /** Constructs a new PacXon Game. */
+    constructor Ghost new() {
+        let x = Random.randomizer(30) + 1;
+        let y = Random.randomizer(13) + 2;
+        let direction = Random.randomizer(4);
+        // let direction = 0;
+        do draw();
+        return this;
+     }
+
+     /** Disposes this Ghost. */
+     method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+     }
+
+    /** Draws the ghost on the screen. */
+    method void draw() {
+        var int scnAddres;
+        let scnAddres = 16384 + (y * 512) + x;
+        do Memory.poke(scnAddres + 0, 960);
+        do Memory.poke(scnAddres + 32, 4080);
+        do Memory.poke(scnAddres + 64, 8184);
+        do Memory.poke(scnAddres + 96, 16380);
+        do Memory.poke(scnAddres + 128, 16382);
+        do Memory.poke(scnAddres + 160, 32766);
+        do Memory.poke(scnAddres + 192, 29134);
+        do Memory.poke(scnAddres + 224, 29070);
+        do Memory.poke(scnAddres + 256, 29646);
+        do Memory.poke(scnAddres + 288, 32766);
+        do Memory.poke(scnAddres + 320, 32766);
+        do Memory.poke(scnAddres + 352, 32766);
+        do Memory.poke(scnAddres + 384, 32766);
+        do Memory.poke(scnAddres + 416, 32766);
+        do Memory.poke(scnAddres + 448, 28534);
+        do Memory.poke(scnAddres + 480, 17954);
+        return;
+    }
+
+    /** Erase the ghost on the screen. */
+    method void erase(){
+        var int scnAddres;
+        let scnAddres = 16384 + (y * 512) + x;
+        do Memory.poke(scnAddres + 0, 0);
+        do Memory.poke(scnAddres + 32, 0);
+        do Memory.poke(scnAddres + 64, 0);
+        do Memory.poke(scnAddres + 96, 0);
+        do Memory.poke(scnAddres + 128, 0);
+        do Memory.poke(scnAddres + 160, 0);
+        do Memory.poke(scnAddres + 192, 0);
+        do Memory.poke(scnAddres + 224, 0);
+        do Memory.poke(scnAddres + 256, 0);
+        do Memory.poke(scnAddres + 288, 0);
+        do Memory.poke(scnAddres + 320, 0);
+        do Memory.poke(scnAddres + 352, 0);
+        do Memory.poke(scnAddres + 384, 0);
+        do Memory.poke(scnAddres + 416, 0);
+        do Memory.poke(scnAddres + 448, 0);
+        do Memory.poke(scnAddres + 480, 0);
+        return;
+    }
+
+    /** Accessors. */
+    method int getDirection(){ return direction; }
+    method int getX(){ return x; }
+    method int getY(){ return y; }
+
+    /** Seters. */
+    method void setDirection(Char newDirection){ let direction = newDirection; return; }
+   
+    /** Moves the ghost up right. */
+    method void moveUpRight(){
+        do erase();
+        let x = x + 1;
+        let y = y - 1;
+        do draw();
+        return;
+    }
+
+    /** Moves the ghost up left. */
+    method void moveUpLeft(){
+        do erase();
+        let x = x - 1;
+        let y = y - 1;
+        do draw();
+        return;
+    }
+
+    /** Moves the ghost down right. */
+    method void moveDownRight(){
+        do erase();
+        let x = x + 1;
+        let y = y + 1;
+        do draw();
+        return;
+    }
+
+    /** Moves the ghost down left. */
+    method void moveDownLeft(){
+        do erase();
+        let x = x - 1;
+        let y = y + 1;
+        do draw();
+        return;
+    }
+}

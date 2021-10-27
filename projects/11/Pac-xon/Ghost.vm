@@ -1,0 +1,346 @@
+function Ghost.new 0
+push constant 3
+call Memory.alloc 1
+pop pointer 0
+push constant 30
+call Random.randomizer 1
+push constant 1
+add
+pop this 0
+push constant 13
+call Random.randomizer 1
+push constant 2
+add
+pop this 1
+push constant 4
+call Random.randomizer 1
+pop this 2
+push pointer 0
+call Ghost.draw 1
+pop temp 0
+push pointer 0
+return
+function Ghost.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Ghost.draw 1
+push argument 0
+pop pointer 0
+push constant 16384
+push this 1
+push constant 512
+call Math.multiply 2
+add
+push this 0
+add
+pop local 0
+push local 0
+push constant 0
+add
+push constant 960
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 4080
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 8184
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 16380
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 16382
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 29134
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 29070
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 29646
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 32766
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 28534
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 17954
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function Ghost.erase 1
+push argument 0
+pop pointer 0
+push constant 16384
+push this 1
+push constant 512
+call Math.multiply 2
+add
+push this 0
+add
+pop local 0
+push local 0
+push constant 0
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function Ghost.getDirection 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function Ghost.getX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Ghost.getY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Ghost.setDirection 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 2
+push constant 0
+return
+function Ghost.moveUpRight 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ghost.erase 1
+pop temp 0
+push this 0
+push constant 1
+add
+pop this 0
+push this 1
+push constant 1
+sub
+pop this 1
+push pointer 0
+call Ghost.draw 1
+pop temp 0
+push constant 0
+return
+function Ghost.moveUpLeft 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ghost.erase 1
+pop temp 0
+push this 0
+push constant 1
+sub
+pop this 0
+push this 1
+push constant 1
+sub
+pop this 1
+push pointer 0
+call Ghost.draw 1
+pop temp 0
+push constant 0
+return
+function Ghost.moveDownRight 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ghost.erase 1
+pop temp 0
+push this 0
+push constant 1
+add
+pop this 0
+push this 1
+push constant 1
+add
+pop this 1
+push pointer 0
+call Ghost.draw 1
+pop temp 0
+push constant 0
+return
+function Ghost.moveDownLeft 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ghost.erase 1
+pop temp 0
+push this 0
+push constant 1
+sub
+pop this 0
+push this 1
+push constant 1
+add
+pop this 1
+push pointer 0
+call Ghost.draw 1
+pop temp 0
+push constant 0
+return

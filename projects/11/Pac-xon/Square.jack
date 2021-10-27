@@ -1,0 +1,20 @@
+/** Implements a graphical square. */
+class Square {
+
+    /** Draws the square on the screen at x y location. */
+    function void draw(int x, int y) {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x + 1, y + 1, x + 14, y + 14);
+        return;
+    }
+
+    /** Erases the square on the screen at x y location. */
+    function void erase(int x, int y) {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x + 1, y + 1, x + 14, y + 14);
+        return;
+    }
+
+        
+
+}

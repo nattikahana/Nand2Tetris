@@ -1,0 +1,41 @@
+function Square.draw 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push argument 0
+push constant 1
+add
+push argument 1
+push constant 1
+add
+push argument 0
+push constant 14
+add
+push argument 1
+push constant 14
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Square.erase 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push argument 0
+push constant 1
+add
+push argument 1
+push constant 1
+add
+push argument 0
+push constant 14
+add
+push argument 1
+push constant 14
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return

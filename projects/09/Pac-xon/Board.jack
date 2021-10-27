@@ -1,0 +1,533 @@
+class Board {
+    field PacMan pac; // screen location of the pacman's top-left corner.
+    field Array boardState;//, found; // describes the board state, found is true if floodfill over it false otherwise.
+    field int level, travelState;
+    field Array ghosts; // holds the ghosts of the current game.
+    field boolean draw, deleteLife;
+    field int success;
+ 
+    /** Constructs a new pacman with a given location and size. */
+    constructor Board new(PacMan pacman, int levelNum) {
+       var int i;
+       let deleteLife = false;
+       let level = levelNum;
+       let pac = pacman;
+       let success = 0;
+       let travelState = 0;
+       do pac.drawLife(31);
+       do pac.drawLife(30);
+       do pac.drawLife(29);
+       do DrawLogo.drawLogo();
+       let boardState = Array.new(480); // 0-white 1-travel -1-black 2-tofill.
+    //    let found = Array.new(480);
+       let draw = true;
+       let i = 0;
+       while(i < 480) {
+           let boardState[i] = 0;
+           let i = i + 1;
+       }
+       let i = 0;
+       let ghosts = Array.new(4);
+       while (i < level){
+           let ghosts[i] = Ghost.new();
+           let i = i + 1;
+       }
+       do drawBoard();
+       do successCalculator();
+       return this;
+    }
+
+    /** Calculates the success from the game. */
+    method void successCalculator(){
+        var int i, blackedCounter;
+        let i = 0;
+        let blackedCounter = 0;
+        while (i < 480){
+            if (boardState[i]){
+                let blackedCounter = blackedCounter + 1;
+            }
+            let i = i + 1;
+        }
+        do Output.moveCursor(0, 0);
+        let success = (blackedCounter - 90)/ 4;
+        do Output.printInt(success);
+        do Output.printString("/80%");
+        return;
+    }
+
+    /** Accessors. */
+    method int getState(int location){ return boardState[location]; }
+    method int getSuccess(){ return success; }
+    method int getLevel(){ return level; }
+    method int TravelState(){ return travelState; }
+    method PacMan getPacman(){ return pac; }
+    method boolean getDelete() { return deleteLife; }  
+
+    method void nextLevel(){
+        let level = level + 1;
+        return;
+    }
+
+    /** Dispose the ghosts. */
+    method void disposeGhosts(){
+        var Ghost inki;
+        var int i;
+        let i = 0;
+        while(i < (level - 1)){
+            let inki = ghosts[i];
+            do inki.dispose();
+            let i = i + 1;
+        }
+        do ghosts.dispose();
+        let level = 0;
+        return;
+    }
+
+    /** Fills the places withot ghosts. */
+    method void floodFill(int posX, int posY, boolean draw, Array found){
+        var Array noGhost;
+        var int i, x, y;
+        var int listLength, ghostsCounter;
+        var boolean flag;
+        var Ghost inki;
+
+        let noGhost = Array.new(390);
+
+        let boardState[posX + ((posY) * 32)] = 2; // mark the point so that I know if I passed through it. 
+        let found[posX + ((posY) * 32)] = true;
+        let noGhost[0] = posX + ((posY) * 32);
+        let i = 0; 
+        let listLength = 1;
+        let flag = true;
+        while (i < listLength){
+            
+            let x = (noGhost[i] - ((noGhost[i] / 32) * 32));
+            let y =  noGhost[i] / 32;
+
+            let ghostsCounter = 0;
+            while((ghostsCounter < level) & flag){
+                let inki = ghosts[ghostsCounter];
+                if ((inki.getX() = x) & (inki.getY() = (y + 1))){
+                    let flag = false;
+                }
+                let ghostsCounter = ghostsCounter + 1;
+            }
+
+            if ((x + 1) < 31){
+                if ((boardState[(x + 1 + ((y) * 32))]) = 0){
+                    let ghostsCounter = 0;
+                    while(ghostsCounter < level){
+                        let inki = ghosts[ghostsCounter];
+                        
+                        if ((inki.getX() = (x + 1)) & (inki.getY() = (y + 1)) ){
+                            let flag = false;
+                        }
+                        let ghostsCounter = ghostsCounter + 1;
+                    }
+
+                    let boardState[x + 1 + (y  * 32)] = 2; // then i can either go right
+                    let found[x + 1 + (y  * 32)] = true;
+                    let noGhost[listLength] = x + 1 + (y * 32);
+                    let listLength = listLength + 1;
+                }
+
+            }
+
+            if ((x - 1) > 0){
+                if  ((boardState[x - 1 + ((y) * 32)]) = 0){
+                    let ghostsCounter = 0;
+                    while(ghostsCounter < level){
+                        let inki = ghosts[ghostsCounter];
+                        if ((inki.getX() = (x - 1)) & (inki.getY() = (y + 1)) ){
+                            let flag = false;
+                        }
+                        let ghostsCounter = ghostsCounter + 1;
+                    }
+
+                    let boardState[x - 1 + (y * 32)] = 2;  // or left
+                    let found[x - 1 + (y * 32)] = true;
+                    let noGhost[listLength] = x - 1 + (y  * 32);
+                    let listLength = listLength + 1;
+                }
+            }
+           
+            if ((y + 1) < 15 ){
+                if  (boardState[x + ((y + 1) * 32)] = 0){
+                    let ghostsCounter = 0;
+                    while(ghostsCounter < level){
+                        let inki = ghosts[ghostsCounter];
+                        if ((inki.getX() = x) & (inki.getY() = (y + 2)) ){
+                            let flag = false;
+                        }
+                        let ghostsCounter = ghostsCounter + 1;
+                    }
+                    
+                    let boardState[x + ((y + 1) * 32)] = 2;  // or down
+                    let found[x + ((y + 1) * 32)] = true;
+                    let noGhost[listLength] = x + ((y + 1) * 32);
+                    let listLength = listLength + 1;
+                }
+            }
+
+           
+            if ((y - 1) > 1){ 
+                if (boardState[x + ((y - 1) * 32)] = 0){
+                    let ghostsCounter = 0;
+                    while(ghostsCounter < level){
+                        let inki = ghosts[ghostsCounter];
+                        if ((inki.getX() = x) & (inki.getY() = y)){
+                            let flag = false;
+                        }
+                        let ghostsCounter = ghostsCounter + 1;
+                    }
+
+                    let boardState[x + ((y - 1) * 32)] = 2;  // or up
+                    let found[x + ((y - 1) * 32)] = true;
+                    let noGhost[listLength] = x + ((y - 1) * 32);
+                    let listLength = listLength + 1;
+                }
+            }
+            let i = i + 1;
+        }
+        let i = 0;
+        while (i < 480){
+            if (boardState[i] = 2){
+                let boardState[i] = 0;
+                if (flag){
+                    let boardState[i] = -1;
+                    do Square.draw((i - (((i / 32) * 32))) * 16, ((i/32) + 1) * 16);
+                }
+            }
+            let i = i + 1;
+        }
+        do noGhost.dispose();
+        return;
+    }
+       
+    /** Dispose this board. */
+    method void dispose() {
+        do pac.dispose();
+        do disposeGhosts();
+        do boardState.dispose();
+        // do found.dispose();
+        do Memory.deAlloc(this);
+        return;
+     }
+
+     /** Draws the board on the screen. */
+    method void drawBoard(){
+        var int i;
+        let i = 1;
+        let boardState[0] = -1;
+
+        while(i < 32){
+                let boardState[i] = -1;
+                let boardState[i+448] = -1;
+                do Square.draw(i*16,16);
+                do Square.draw(i*16,240);
+                let i = i + 1;
+            }
+        
+        let i = 2;
+        while(i < 16){
+            let boardState[i*32] = -1;
+            let boardState[i*32 + 31] = -1;
+            do Square.draw( 0,i*16);
+            do Square.draw(496,i*16);
+            let i = i + 1;
+        }
+        let boardState[32] = -1;
+        let boardState[32 + 31] = -1;
+        return;
+    }
+
+    /** Handle when the game end a path. */
+    method void endPath(){
+        var int i;
+        var int next;
+        var Array found;
+        let found = Array.new(480);
+        let travelState = 0;
+        let i = 0;
+        while (i<480){
+
+            if (boardState[i] = 1){
+                let boardState[i] = -1;
+            } 
+
+            if (boardState[i] = 2){
+                let boardState[i] = 0;
+            }
+            let found[i] = false;
+           
+            let i = i + 1;
+        }
+        let i = 32;
+        while (i < 480){
+            let draw = true;
+            if ((boardState[i] = 0) & (found[i] = false)){
+                do floodFill((i - ((i / 32) * 32)), (i / 32), draw, found);
+            }
+            let i = i + 1;
+        }
+        do successCalculator();
+        do found.dispose();
+        return;
+    }
+
+    /** Handle when the right arrow is pressed. */
+    method void moveRight(){
+        
+        if (pac.getX() < 31) {
+            if (boardState[((pac.getY() -1) * 32) + pac.getX() + 1] = -1 ){
+                if (boardState[((pac.getY() -1) * 32) + pac.getX()] = 1 ){
+                    do endPath();
+                }
+                do pac.moveRight();
+                do Square.draw((pac.getX() -1) * 16, pac.getY() * 16);
+                return;
+            }
+            if (boardState[((pac.getY() -1) * 32) + pac.getX() + 1] = 1){
+                do removeLife();
+                return;
+            }  
+            let travelState = 4;
+            let boardState[((pac.getY() -1) * 32) + pac.getX()+1] = 1;
+            do pac.moveRight();
+            do Square.draw((pac.getX() -1) * 16, pac.getY() * 16);                
+        }
+        return;
+
+    }
+
+    /** Handle when the left arrow is pressed. */
+    method void moveLeft(){
+        var int i;
+        let i = 0;
+        if (pac.getX() > 0) {
+            if (boardState[((pac.getY() - 1) * 32) + pac.getX() - 1] = -1 ){
+                if (boardState[((pac.getY() -1) * 32) + pac.getX()] = 1 ){
+                    /// update if no ghost
+                    do endPath();
+                }   
+                do pac.moveLeft();
+                do Square.draw((pac.getX() + 1) * 16, pac.getY() * 16 );
+                return;
+            }
+            if (boardState[((pac.getY() - 1) * 32) + pac.getX() - 1] = 1){
+                do removeLife();
+                return;
+            }
+            let travelState = 3;
+            let boardState[((pac.getY() -1) * 32) + pac.getX() - 1] = 1;
+            do pac.moveLeft();
+            do Square.draw((pac.getX() + 1) * 16, pac.getY() * 16 );
+        }
+        return;
+    }
+
+    /** Handle when the up arrow is pressed. */
+    method void moveUp(){
+        var int i;
+        let i =0;
+
+        if (pac.getY() > 1){
+            if ( boardState[((pac.getY()-2) * 32) + pac.getX()] = -1 ){
+                if (boardState[((pac.getY() -1) * 32) + pac.getX()] = 1){
+                    /// update if no ghost
+                    do endPath();
+                }
+                do pac.moveUp();
+                do Square.draw( pac.getX()  * 16, (pac.getY() +1) * 16 );
+                return;
+            }
+            if (boardState[((pac.getY()-2) * 32) + pac.getX()] = 1){
+                do removeLife();
+                return;
+            }
+            let travelState = 1;
+            let boardState[((pac.getY() -2) * 32) + pac.getX()] = 1;
+            do pac.moveUp();
+            do Square.draw( pac.getX()  * 16, (pac.getY() +1) * 16 );
+        }
+        return;
+    }
+
+    /** Handle when the down arrow is pressed. */
+    method void moveDown(){
+        var int i;
+        let i = 0;
+        if (pac.getY() < 15){
+            if (boardState[(pac.getY() * 32) + pac.getX()] = -1){
+                if (boardState[((pac.getY() -1) * 32) + pac.getX()] = 1 ){
+                    do endPath();
+                }                   
+                do pac.moveDown();
+                do Square.draw(pac.getX() * 16, (pac.getY() -1) * 16 );
+                return;
+            }
+            if (boardState[(pac.getY() * 32) + pac.getX()] = 1){
+                do removeLife();
+                return;
+            }
+            let travelState = 2;
+            let boardState[(pac.getY() * 32) + pac.getX()] = 1;
+            do pac.moveDown();
+            do Square.draw(pac.getX() * 16, (pac.getY() -1) * 16 );
+            
+        }
+        return;
+    }
+
+    /** Move the ghost during the game. */
+    method void moveGhost(){
+        var int i;
+        var Ghost kasper;
+        let i = 0;
+        while (i < level){
+            let kasper = ghosts[i];
+            // Move the ghost in case the current direction is up right.
+            if (kasper.getDirection() = 0){
+                if (boardState[(kasper.getY()-2) * 32 + kasper.getX() + 1] = 0){
+                    do kasper.moveUpRight();
+                }
+                if (boardState[(kasper.getY()-2) * 32 + kasper.getX() + 1] = 1){
+                    do removeLife();
+                }
+                if (boardState[(kasper.getY()-2) * 32 + kasper.getX() + 1] = -1){
+
+                   if (boardState[(kasper.getY()) * 32 + kasper.getX() + 1] = 0){
+                        do kasper.setDirection(2);
+                    }
+
+                   if (boardState[(kasper.getY())*32 + kasper.getX() + 1] = 1){
+                        do removeLife();
+                    }
+
+                    if (boardState[(kasper.getY() -2)*32 + kasper.getX() - 1] = 0){
+                        do kasper.setDirection(1);
+                    }
+                    if (boardState[(kasper.getY() -2)*32 + kasper.getX() - 1] = 1){
+                        do removeLife();
+                    }
+
+
+                    if ((boardState[(kasper.getY())*32 + kasper.getX() + 1])  &
+                     (boardState[(kasper.getY() -2)*32 + kasper.getX() - 1])){
+                        do kasper.setDirection(3);
+                     }
+                }
+            }
+
+            // Move the ghost in case the current direction is up left.
+            if (kasper.getDirection() = 1){
+                if (boardState[(kasper.getY()-2)*32 + kasper.getX() - 1] = 0){
+                    do kasper.moveUpLeft();
+                }
+                if (boardState[(kasper.getY()-2)*32 + kasper.getX() - 1] = 1){
+                    do removeLife();
+                }
+                if (boardState[(kasper.getY()-2)*32 + kasper.getX() - 1] = -1) {
+                    if (boardState[(kasper.getY()-2)*32 + kasper.getX() + 1] = 0){
+                        do kasper.setDirection(0);
+                    }
+                    if (boardState[(kasper.getY())*32 + kasper.getX() - 1] = 0){
+                        do kasper.setDirection(3);
+                    }
+                    if (boardState[(kasper.getY()-2)*32 + kasper.getX() + 1] = 1){
+                        do removeLife();
+                    }
+                    if (boardState[(kasper.getY())*32 + kasper.getX() - 1] = 1){
+                        do removeLife();
+                    }
+                    if ((boardState[(kasper.getY()-2)*32 + kasper.getX() + 1] = -1)  &
+                    (boardState[(kasper.getY())*32 + kasper.getX() - 1] ) = -1){
+                        do kasper.setDirection(2);
+                    }  
+                }   
+            }
+
+            // Move the ghost in case the current direction is down right.
+            if (kasper.getDirection() = 2){
+                if (boardState[(kasper.getY())*32 + kasper.getX() + 1] = 0){
+                    do kasper.moveDownRight();
+                }
+                if (boardState[(kasper.getY())*32 + kasper.getX() + 1] = 1){
+                    do removeLife();
+                }
+                if (boardState[(kasper.getY())*32 + kasper.getX() + 1] = -1) {
+                    if (boardState[(kasper.getY()-2)*32 + kasper.getX() + 1] = 0){
+                        do kasper.setDirection(0);
+                    }
+                    if (boardState[(kasper.getY())*32 + kasper.getX() - 1] = 0){
+                        do kasper.setDirection(3);
+                    }
+                    if (boardState[(kasper.getY()-2)*32 + kasper.getX() + 1] = 1){
+                        do removeLife();
+                    }
+                    if (boardState[(kasper.getY())*32 + kasper.getX() - 1] = 1){
+                        do removeLife();
+                    }
+                    if ((boardState[(kasper.getY()-2)*32 + kasper.getX() + 1] = -1)  &
+                    (boardState[(kasper.getY())*32 + kasper.getX() - 1]) = -1){
+                        do kasper.setDirection(1);
+                    }  
+                } 
+
+            }
+
+            // Move the ghost in case the current direction is down left.
+            if (kasper.getDirection() = 3){
+                if (boardState[(kasper.getY())*32 + kasper.getX() - 1] = 0){
+                    do kasper.moveDownLeft();
+                }
+                if (boardState[(kasper.getY())*32 + kasper.getX() - 1] = 1) {
+                    do removeLife();
+                }
+                if (boardState[(kasper.getY())*32 + kasper.getX() - 1] = -1) {
+                    if (boardState[(kasper.getY()-2)*32 + kasper.getX() - 1] = 0){
+                        do kasper.setDirection(1);
+                    }
+                    if (boardState[(kasper.getY())*32 + kasper.getX() + 1] = 0){
+                        do kasper.setDirection(2);
+                    }
+                    if (boardState[(kasper.getY()-2)*32 + kasper.getX() - 1] = 1){
+                        do removeLife();
+                    }
+                    if (boardState[(kasper.getY())*32 + kasper.getX() + 1] = 1){
+                        do removeLife();
+                    }
+                    if ((boardState[(kasper.getY()-2)*32 + kasper.getX() - 1] = -1)  &
+                    (boardState[(kasper.getY())*32 + kasper.getX() + 1] ) = -1){
+                        do kasper.setDirection(0);
+                    }  
+                }
+
+            }
+            let i = i + 1;
+        }
+        return;
+
+    }
+
+    /** Update deleteLife to false. */
+    method void setDelete() { 
+        let deleteLife = false;
+        return;
+    }
+
+    /** Remove a life of the game. */
+    method void removeLife(){
+        var int i;
+        let travelState = 0;
+        let deleteLife = true;
+        while (i < 480){
+            if (boardState[i] = 1) {
+                let boardState[i] = 0;
+                do Square.erase((i - (((i / 32) * 32))) * 16, ((i/32) + 1) * 16);
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+}

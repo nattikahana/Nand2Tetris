@@ -1,0 +1,2671 @@
+function Board.new 1
+push constant 8
+call Memory.alloc 1
+pop pointer 0
+push constant 0
+pop this 6
+push argument 1
+pop this 2
+push argument 0
+pop this 0
+push constant 0
+pop this 7
+push constant 0
+pop this 3
+push this 0
+push constant 31
+call PacMan.drawLife 2
+pop temp 0
+push this 0
+push constant 30
+call PacMan.drawLife 2
+pop temp 0
+push this 0
+push constant 29
+call PacMan.drawLife 2
+pop temp 0
+call DrawLogo.drawLogo 0
+pop temp 0
+push constant 480
+call Array.new 1
+pop this 1
+push constant 0
+not
+pop this 5
+push constant 0
+pop local 0
+label WHILE_TRUE0
+push local 0
+push constant 480
+lt
+not
+if-goto WHILE_FALSE0
+push this 1
+push local 0
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE0
+label WHILE_FALSE0
+push constant 0
+pop local 0
+push constant 4
+call Array.new 1
+pop this 4
+label WHILE_TRUE1
+push local 0
+push this 2
+lt
+not
+if-goto WHILE_FALSE1
+push this 4
+push local 0
+add
+call Ghost.new 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE1
+label WHILE_FALSE1
+push pointer 0
+call Board.drawBoard 1
+pop temp 0
+push pointer 0
+call Board.successCalculator 1
+pop temp 0
+push pointer 0
+return
+function Board.successCalculator 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+label WHILE_TRUE2
+push local 0
+push constant 480
+lt
+not
+if-goto WHILE_FALSE2
+push this 1
+push local 0
+add
+pop pointer 1
+push that 0
+not
+if-goto IF_FALSE0
+push local 1
+push constant 1
+add
+pop local 1
+goto IF_TRUE0
+label IF_FALSE0
+label IF_TRUE0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE2
+label WHILE_FALSE2
+push constant 0
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+push local 1
+push constant 90
+sub
+push constant 4
+call Math.divide 2
+pop this 7
+push this 7
+call Output.printInt 1
+pop temp 0
+push constant 4
+call String.new 1
+push constant 47
+call String.appendChar 2
+push constant 56
+call String.appendChar 2
+push constant 48
+call String.appendChar 2
+push constant 37
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+push constant 0
+return
+function Board.getState 0
+push argument 0
+pop pointer 0
+push this 1
+push argument 1
+add
+pop pointer 1
+push that 0
+return
+function Board.getSuccess 0
+push argument 0
+pop pointer 0
+push this 7
+return
+function Board.getLevel 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function Board.TravelState 0
+push argument 0
+pop pointer 0
+push this 3
+return
+function Board.getPacman 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Board.getDelete 0
+push argument 0
+pop pointer 0
+push this 6
+return
+function Board.nextLevel 0
+push argument 0
+pop pointer 0
+push this 2
+push constant 1
+add
+pop this 2
+push constant 0
+return
+function Board.disposeGhosts 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 1
+label WHILE_TRUE3
+push local 1
+push this 2
+push constant 1
+sub
+lt
+not
+if-goto WHILE_FALSE3
+push this 4
+push local 1
+add
+pop pointer 1
+push that 0
+pop local 0
+push local 0
+call Ghost.dispose 1
+pop temp 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_TRUE3
+label WHILE_FALSE3
+push this 4
+call Array.dispose 1
+pop temp 0
+push constant 0
+pop this 2
+push constant 0
+return
+function Board.floodFill 8
+push argument 0
+pop pointer 0
+push constant 390
+call Array.new 1
+pop local 0
+push this 1
+push argument 1
+push argument 2
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 4
+push argument 1
+push argument 2
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 0
+not
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 0
+add
+push argument 1
+push argument 2
+push constant 32
+call Math.multiply 2
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+pop local 1
+push constant 1
+pop local 4
+push constant 0
+not
+pop local 6
+label WHILE_TRUE4
+push local 1
+push local 4
+lt
+not
+if-goto WHILE_FALSE4
+push local 0
+push local 1
+add
+pop pointer 1
+push that 0
+push local 0
+push local 1
+add
+pop pointer 1
+push that 0
+push constant 32
+call Math.divide 2
+push constant 32
+call Math.multiply 2
+sub
+pop local 2
+push local 0
+push local 1
+add
+pop pointer 1
+push that 0
+push constant 32
+call Math.divide 2
+pop local 3
+push constant 0
+pop local 5
+label WHILE_TRUE5
+push local 5
+push this 2
+lt
+push local 6
+and
+not
+if-goto WHILE_FALSE5
+push this 4
+push local 5
+add
+pop pointer 1
+push that 0
+pop local 7
+push local 7
+call Ghost.getX 1
+push local 2
+eq
+push local 7
+call Ghost.getY 1
+push local 3
+push constant 1
+add
+eq
+and
+not
+if-goto IF_FALSE1
+push constant 0
+pop local 6
+goto IF_TRUE1
+label IF_FALSE1
+label IF_TRUE1
+push local 5
+push constant 1
+add
+pop local 5
+goto WHILE_TRUE5
+label WHILE_FALSE5
+push local 2
+push constant 1
+add
+push constant 31
+lt
+not
+if-goto IF_FALSE2
+push this 1
+push local 2
+push constant 1
+add
+push local 3
+push constant 32
+call Math.multiply 2
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE3
+push constant 0
+pop local 5
+label WHILE_TRUE6
+push local 5
+push this 2
+lt
+not
+if-goto WHILE_FALSE6
+push this 4
+push local 5
+add
+pop pointer 1
+push that 0
+pop local 7
+push local 7
+call Ghost.getX 1
+push local 2
+push constant 1
+add
+eq
+push local 7
+call Ghost.getY 1
+push local 3
+push constant 1
+add
+eq
+and
+not
+if-goto IF_FALSE4
+push constant 0
+pop local 6
+goto IF_TRUE4
+label IF_FALSE4
+label IF_TRUE4
+push local 5
+push constant 1
+add
+pop local 5
+goto WHILE_TRUE6
+label WHILE_FALSE6
+push this 1
+push local 2
+push constant 1
+add
+push local 3
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 4
+push local 2
+push constant 1
+add
+push local 3
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 0
+not
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push local 4
+add
+push local 2
+push constant 1
+add
+push local 3
+push constant 32
+call Math.multiply 2
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 4
+push constant 1
+add
+pop local 4
+goto IF_TRUE3
+label IF_FALSE3
+label IF_TRUE3
+goto IF_TRUE2
+label IF_FALSE2
+label IF_TRUE2
+push local 2
+push constant 1
+sub
+push constant 0
+gt
+not
+if-goto IF_FALSE5
+push this 1
+push local 2
+push constant 1
+sub
+push local 3
+push constant 32
+call Math.multiply 2
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE6
+push constant 0
+pop local 5
+label WHILE_TRUE7
+push local 5
+push this 2
+lt
+not
+if-goto WHILE_FALSE7
+push this 4
+push local 5
+add
+pop pointer 1
+push that 0
+pop local 7
+push local 7
+call Ghost.getX 1
+push local 2
+push constant 1
+sub
+eq
+push local 7
+call Ghost.getY 1
+push local 3
+push constant 1
+add
+eq
+and
+not
+if-goto IF_FALSE7
+push constant 0
+pop local 6
+goto IF_TRUE7
+label IF_FALSE7
+label IF_TRUE7
+push local 5
+push constant 1
+add
+pop local 5
+goto WHILE_TRUE7
+label WHILE_FALSE7
+push this 1
+push local 2
+push constant 1
+sub
+push local 3
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 4
+push local 2
+push constant 1
+sub
+push local 3
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 0
+not
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push local 4
+add
+push local 2
+push constant 1
+sub
+push local 3
+push constant 32
+call Math.multiply 2
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 4
+push constant 1
+add
+pop local 4
+goto IF_TRUE6
+label IF_FALSE6
+label IF_TRUE6
+goto IF_TRUE5
+label IF_FALSE5
+label IF_TRUE5
+push local 3
+push constant 1
+add
+push constant 15
+lt
+not
+if-goto IF_FALSE8
+push this 1
+push local 2
+push local 3
+push constant 1
+add
+push constant 32
+call Math.multiply 2
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE9
+push constant 0
+pop local 5
+label WHILE_TRUE8
+push local 5
+push this 2
+lt
+not
+if-goto WHILE_FALSE8
+push this 4
+push local 5
+add
+pop pointer 1
+push that 0
+pop local 7
+push local 7
+call Ghost.getX 1
+push local 2
+eq
+push local 7
+call Ghost.getY 1
+push local 3
+push constant 2
+add
+eq
+and
+not
+if-goto IF_FALSE10
+push constant 0
+pop local 6
+goto IF_TRUE10
+label IF_FALSE10
+label IF_TRUE10
+push local 5
+push constant 1
+add
+pop local 5
+goto WHILE_TRUE8
+label WHILE_FALSE8
+push this 1
+push local 2
+push local 3
+push constant 1
+add
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 4
+push local 2
+push local 3
+push constant 1
+add
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 0
+not
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push local 4
+add
+push local 2
+push local 3
+push constant 1
+add
+push constant 32
+call Math.multiply 2
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 4
+push constant 1
+add
+pop local 4
+goto IF_TRUE9
+label IF_FALSE9
+label IF_TRUE9
+goto IF_TRUE8
+label IF_FALSE8
+label IF_TRUE8
+push local 3
+push constant 1
+sub
+push constant 1
+gt
+not
+if-goto IF_FALSE11
+push this 1
+push local 2
+push local 3
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE12
+push constant 0
+pop local 5
+label WHILE_TRUE9
+push local 5
+push this 2
+lt
+not
+if-goto WHILE_FALSE9
+push this 4
+push local 5
+add
+pop pointer 1
+push that 0
+pop local 7
+push local 7
+call Ghost.getX 1
+push local 2
+eq
+push local 7
+call Ghost.getY 1
+push local 3
+eq
+and
+not
+if-goto IF_FALSE13
+push constant 0
+pop local 6
+goto IF_TRUE13
+label IF_FALSE13
+label IF_TRUE13
+push local 5
+push constant 1
+add
+pop local 5
+goto WHILE_TRUE9
+label WHILE_FALSE9
+push this 1
+push local 2
+push local 3
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push argument 4
+push local 2
+push local 3
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+add
+add
+push constant 0
+not
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push local 4
+add
+push local 2
+push local 3
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+add
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 4
+push constant 1
+add
+pop local 4
+goto IF_TRUE12
+label IF_FALSE12
+label IF_TRUE12
+goto IF_TRUE11
+label IF_FALSE11
+label IF_TRUE11
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_TRUE4
+label WHILE_FALSE4
+push constant 0
+pop local 1
+label WHILE_TRUE10
+push local 1
+push constant 480
+lt
+not
+if-goto WHILE_FALSE10
+push this 1
+push local 1
+add
+pop pointer 1
+push that 0
+push constant 2
+eq
+not
+if-goto IF_FALSE14
+push this 1
+push local 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 6
+not
+if-goto IF_FALSE15
+push this 1
+push local 1
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+push local 1
+push constant 32
+call Math.divide 2
+push constant 32
+call Math.multiply 2
+sub
+push constant 16
+call Math.multiply 2
+push local 1
+push constant 32
+call Math.divide 2
+push constant 1
+add
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+goto IF_TRUE15
+label IF_FALSE15
+label IF_TRUE15
+goto IF_TRUE14
+label IF_FALSE14
+label IF_TRUE14
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_TRUE10
+label WHILE_FALSE10
+push local 0
+call Array.dispose 1
+pop temp 0
+push constant 0
+return
+function Board.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call PacMan.dispose 1
+pop temp 0
+push pointer 0
+call Board.disposeGhosts 1
+pop temp 0
+push this 1
+call Array.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Board.drawBoard 1
+push argument 0
+pop pointer 0
+push constant 1
+pop local 0
+push this 1
+push constant 0
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label WHILE_TRUE11
+push local 0
+push constant 32
+lt
+not
+if-goto WHILE_FALSE11
+push this 1
+push local 0
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 1
+push local 0
+push constant 448
+add
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 16
+call Math.multiply 2
+push constant 16
+call Square.draw 2
+pop temp 0
+push local 0
+push constant 16
+call Math.multiply 2
+push constant 240
+call Square.draw 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE11
+label WHILE_FALSE11
+push constant 2
+pop local 0
+label WHILE_TRUE12
+push local 0
+push constant 16
+lt
+not
+if-goto WHILE_FALSE12
+push this 1
+push local 0
+push constant 32
+call Math.multiply 2
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 1
+push local 0
+push constant 32
+call Math.multiply 2
+push constant 31
+add
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+push local 0
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+push constant 496
+push local 0
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE12
+label WHILE_FALSE12
+push this 1
+push constant 32
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 1
+push constant 32
+push constant 31
+add
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function Board.endPath 3
+push argument 0
+pop pointer 0
+push constant 480
+call Array.new 1
+pop local 2
+push constant 0
+pop this 3
+push constant 0
+pop local 0
+label WHILE_TRUE13
+push local 0
+push constant 480
+lt
+not
+if-goto WHILE_FALSE13
+push this 1
+push local 0
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE16
+push this 1
+push local 0
+add
+push constant 1
+neg
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto IF_TRUE16
+label IF_FALSE16
+label IF_TRUE16
+push this 1
+push local 0
+add
+pop pointer 1
+push that 0
+push constant 2
+eq
+not
+if-goto IF_FALSE17
+push this 1
+push local 0
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto IF_TRUE17
+label IF_FALSE17
+label IF_TRUE17
+push local 2
+push local 0
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE13
+label WHILE_FALSE13
+push constant 32
+pop local 0
+label WHILE_TRUE14
+push local 0
+push constant 480
+lt
+not
+if-goto WHILE_FALSE14
+push constant 0
+not
+pop this 5
+push this 1
+push local 0
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+push local 2
+push local 0
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+and
+not
+if-goto IF_FALSE18
+push pointer 0
+push local 0
+push local 0
+push constant 32
+call Math.divide 2
+push constant 32
+call Math.multiply 2
+sub
+push local 0
+push constant 32
+call Math.divide 2
+push this 5
+push local 2
+call Board.floodFill 5
+pop temp 0
+goto IF_TRUE18
+label IF_FALSE18
+label IF_TRUE18
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE14
+label WHILE_FALSE14
+push pointer 0
+call Board.successCalculator 1
+pop temp 0
+push local 2
+call Array.dispose 1
+pop temp 0
+push constant 0
+return
+function Board.moveRight 0
+push argument 0
+pop pointer 0
+push this 0
+call PacMan.getX 1
+push constant 31
+lt
+not
+if-goto IF_FALSE19
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE20
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE21
+push pointer 0
+call Board.endPath 1
+pop temp 0
+goto IF_TRUE21
+label IF_FALSE21
+label IF_TRUE21
+push this 0
+call PacMan.moveRight 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 1
+sub
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+push constant 0
+return
+goto IF_TRUE20
+label IF_FALSE20
+label IF_TRUE20
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE22
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+push constant 0
+return
+goto IF_TRUE22
+label IF_FALSE22
+label IF_TRUE22
+push constant 4
+pop this 3
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+push constant 1
+add
+add
+push constant 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 0
+call PacMan.moveRight 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 1
+sub
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+goto IF_TRUE19
+label IF_FALSE19
+label IF_TRUE19
+push constant 0
+return
+function Board.moveLeft 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push this 0
+call PacMan.getX 1
+push constant 0
+gt
+not
+if-goto IF_FALSE23
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE24
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE25
+push pointer 0
+call Board.endPath 1
+pop temp 0
+goto IF_TRUE25
+label IF_FALSE25
+label IF_TRUE25
+push this 0
+call PacMan.moveLeft 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 1
+add
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+push constant 0
+return
+goto IF_TRUE24
+label IF_FALSE24
+label IF_TRUE24
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE26
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+push constant 0
+return
+goto IF_TRUE26
+label IF_FALSE26
+label IF_TRUE26
+push constant 3
+pop this 3
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+push constant 1
+sub
+add
+push constant 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 0
+call PacMan.moveLeft 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 1
+add
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+goto IF_TRUE23
+label IF_FALSE23
+label IF_TRUE23
+push constant 0
+return
+function Board.moveUp 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push this 0
+call PacMan.getY 1
+push constant 1
+gt
+not
+if-goto IF_FALSE27
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE28
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE29
+push pointer 0
+call Board.endPath 1
+pop temp 0
+goto IF_TRUE29
+label IF_FALSE29
+label IF_TRUE29
+push this 0
+call PacMan.moveUp 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 1
+add
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+push constant 0
+return
+goto IF_TRUE28
+label IF_FALSE28
+label IF_TRUE28
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE30
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+push constant 0
+return
+goto IF_TRUE30
+label IF_FALSE30
+label IF_TRUE30
+push constant 1
+pop this 3
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+push constant 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 0
+call PacMan.moveUp 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 1
+add
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+goto IF_TRUE27
+label IF_FALSE27
+label IF_TRUE27
+push constant 0
+return
+function Board.moveDown 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push this 0
+call PacMan.getY 1
+push constant 15
+lt
+not
+if-goto IF_FALSE31
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE32
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE33
+push pointer 0
+call Board.endPath 1
+pop temp 0
+goto IF_TRUE33
+label IF_FALSE33
+label IF_TRUE33
+push this 0
+call PacMan.moveDown 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+push constant 0
+return
+goto IF_TRUE32
+label IF_FALSE32
+label IF_TRUE32
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE34
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+push constant 0
+return
+goto IF_TRUE34
+label IF_FALSE34
+label IF_TRUE34
+push constant 2
+pop this 3
+push this 1
+push this 0
+call PacMan.getY 1
+push constant 32
+call Math.multiply 2
+push this 0
+call PacMan.getX 1
+add
+add
+push constant 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push this 0
+call PacMan.moveDown 1
+pop temp 0
+push this 0
+call PacMan.getX 1
+push constant 16
+call Math.multiply 2
+push this 0
+call PacMan.getY 1
+push constant 1
+sub
+push constant 16
+call Math.multiply 2
+call Square.draw 2
+pop temp 0
+goto IF_TRUE31
+label IF_FALSE31
+label IF_TRUE31
+push constant 0
+return
+function Board.moveGhost 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_TRUE15
+push local 0
+push this 2
+lt
+not
+if-goto WHILE_FALSE15
+push this 4
+push local 0
+add
+pop pointer 1
+push that 0
+pop local 1
+push local 1
+call Ghost.getDirection 1
+push constant 0
+eq
+not
+if-goto IF_FALSE35
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE36
+push local 1
+call Ghost.moveUpRight 1
+pop temp 0
+goto IF_TRUE36
+label IF_FALSE36
+label IF_TRUE36
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE37
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE37
+label IF_FALSE37
+label IF_TRUE37
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE38
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE39
+push local 1
+push constant 2
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE39
+label IF_FALSE39
+label IF_TRUE39
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE40
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE40
+label IF_FALSE40
+label IF_TRUE40
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE41
+push local 1
+push constant 1
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE41
+label IF_FALSE41
+label IF_TRUE41
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE42
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE42
+label IF_FALSE42
+label IF_TRUE42
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+and
+not
+if-goto IF_FALSE43
+push local 1
+push constant 3
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE43
+label IF_FALSE43
+label IF_TRUE43
+goto IF_TRUE38
+label IF_FALSE38
+label IF_TRUE38
+goto IF_TRUE35
+label IF_FALSE35
+label IF_TRUE35
+push local 1
+call Ghost.getDirection 1
+push constant 1
+eq
+not
+if-goto IF_FALSE44
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE45
+push local 1
+call Ghost.moveUpLeft 1
+pop temp 0
+goto IF_TRUE45
+label IF_FALSE45
+label IF_TRUE45
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE46
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE46
+label IF_FALSE46
+label IF_TRUE46
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE47
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE48
+push local 1
+push constant 0
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE48
+label IF_FALSE48
+label IF_TRUE48
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE49
+push local 1
+push constant 3
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE49
+label IF_FALSE49
+label IF_TRUE49
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE50
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE50
+label IF_FALSE50
+label IF_TRUE50
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE51
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE51
+label IF_FALSE51
+label IF_TRUE51
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+and
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE52
+push local 1
+push constant 2
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE52
+label IF_FALSE52
+label IF_TRUE52
+goto IF_TRUE47
+label IF_FALSE47
+label IF_TRUE47
+goto IF_TRUE44
+label IF_FALSE44
+label IF_TRUE44
+push local 1
+call Ghost.getDirection 1
+push constant 2
+eq
+not
+if-goto IF_FALSE53
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE54
+push local 1
+call Ghost.moveDownRight 1
+pop temp 0
+goto IF_TRUE54
+label IF_FALSE54
+label IF_TRUE54
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE55
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE55
+label IF_FALSE55
+label IF_TRUE55
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE56
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE57
+push local 1
+push constant 0
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE57
+label IF_FALSE57
+label IF_TRUE57
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE58
+push local 1
+push constant 3
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE58
+label IF_FALSE58
+label IF_TRUE58
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE59
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE59
+label IF_FALSE59
+label IF_TRUE59
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE60
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE60
+label IF_FALSE60
+label IF_TRUE60
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+and
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE61
+push local 1
+push constant 1
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE61
+label IF_FALSE61
+label IF_TRUE61
+goto IF_TRUE56
+label IF_FALSE56
+label IF_TRUE56
+goto IF_TRUE53
+label IF_FALSE53
+label IF_TRUE53
+push local 1
+call Ghost.getDirection 1
+push constant 3
+eq
+not
+if-goto IF_FALSE62
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE63
+push local 1
+call Ghost.moveDownLeft 1
+pop temp 0
+goto IF_TRUE63
+label IF_FALSE63
+label IF_TRUE63
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE64
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE64
+label IF_FALSE64
+label IF_TRUE64
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE65
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE66
+push local 1
+push constant 1
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE66
+label IF_FALSE66
+label IF_TRUE66
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 0
+eq
+not
+if-goto IF_FALSE67
+push local 1
+push constant 2
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE67
+label IF_FALSE67
+label IF_TRUE67
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE68
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE68
+label IF_FALSE68
+label IF_TRUE68
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE69
+push pointer 0
+call Board.removeLife 1
+pop temp 0
+goto IF_TRUE69
+label IF_FALSE69
+label IF_TRUE69
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 2
+sub
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+sub
+add
+pop pointer 1
+push that 0
+push constant 1
+neg
+eq
+push this 1
+push local 1
+call Ghost.getY 1
+push constant 32
+call Math.multiply 2
+push local 1
+call Ghost.getX 1
+add
+push constant 1
+add
+add
+pop pointer 1
+push that 0
+and
+push constant 1
+neg
+eq
+not
+if-goto IF_FALSE70
+push local 1
+push constant 0
+call Ghost.setDirection 2
+pop temp 0
+goto IF_TRUE70
+label IF_FALSE70
+label IF_TRUE70
+goto IF_TRUE65
+label IF_FALSE65
+label IF_TRUE65
+goto IF_TRUE62
+label IF_FALSE62
+label IF_TRUE62
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE15
+label WHILE_FALSE15
+push constant 0
+return
+function Board.setDelete 0
+push argument 0
+pop pointer 0
+push constant 0
+pop this 6
+push constant 0
+return
+function Board.removeLife 1
+push argument 0
+pop pointer 0
+push constant 0
+pop this 3
+push constant 0
+not
+pop this 6
+label WHILE_TRUE16
+push local 0
+push constant 480
+lt
+not
+if-goto WHILE_FALSE16
+push this 1
+push local 0
+add
+pop pointer 1
+push that 0
+push constant 1
+eq
+not
+if-goto IF_FALSE71
+push this 1
+push local 0
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push local 0
+push constant 32
+call Math.divide 2
+push constant 32
+call Math.multiply 2
+sub
+push constant 16
+call Math.multiply 2
+push local 0
+push constant 32
+call Math.divide 2
+push constant 1
+add
+push constant 16
+call Math.multiply 2
+call Square.erase 2
+pop temp 0
+goto IF_TRUE71
+label IF_FALSE71
+label IF_TRUE71
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE16
+label WHILE_FALSE16
+push constant 0
+return

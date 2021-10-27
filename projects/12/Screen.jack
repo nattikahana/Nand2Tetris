@@ -1,0 +1,227 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Screen.jack
+
+/**
+ * A library of functions for displaying graphics on the screen.
+ * The Hack physical screen consists of 256 rows (indexed 0..255, top to bottom)
+ * of 512 pixels each (indexed 0..511, left to right). The top left pixel on 
+ * the screen is indexed (0,0).
+ */
+class Screen {
+    static Array bin;
+    static boolean toBlack;
+    /** Initializes the Screen. */
+    
+    function void init() {
+        let toBlack = true;
+        let bin = Array.new(32);
+        let bin[0] = 1;
+        let bin[1] = 2;
+        let bin[2] = 4;
+        let bin[3] = 8;
+        let bin[4] = 16;
+        let bin[5] = 32;
+        let bin[6] = 64;
+        let bin[7] = 128;
+        let bin[8] = 256;
+        let bin[9] = 512;
+        let bin[10] = 1024;
+        let bin[11] = 2048;
+        let bin[12] = 4096;
+        let bin[13] = 8192;
+        let bin[14] = 16384;
+        let bin[15] = 16384 + 16384;
+        
+        let bin[16] = -2;
+        let bin[17] = -3;
+        let bin[18] = -5;
+        let bin[19] = -9;
+        let bin[20] = -17;
+        let bin[21] = -33;
+        let bin[22] = -65;
+        let bin[23] = -129;
+        let bin[24] = -257;
+        let bin[25] = -513;
+        let bin[26] = -1025;
+        let bin[27] = -2049;
+        let bin[28] = -4097;
+        let bin[29] = -8193;
+        let bin[30] = -16385;
+        let bin[31] = 32767;
+        return;
+    }
+
+    /** Erases the entire screen. */
+    function void clearScreen() {
+        var int i;
+        let i = 16384;
+        while (i < 24576){
+            do Memory.poke(i, 0);
+            let i = i + 1;
+        }
+        let toBlack = true;
+        return;
+    }
+
+    /** Sets the current color, to be used for all subsequent drawXXX commands.
+     *  Black is represented by true, white by false. */
+    function void setColor(boolean b) {
+        if (b) {
+            let toBlack = true;
+        }
+        else {
+            let toBlack = false;
+        }
+        return;
+    }
+
+    /** Draws the (x,y) pixel, using the current color. */
+    function void drawPixel(int x, int y) {
+        var int addr, value, mod;
+        let addr = (Screen.poewr2(y, 5)) + (x / 16) + 16384;
+        let value = Memory.peek(addr);
+        let mod = (x & 15);
+        if (toBlack) {
+            let value = (value | bin[mod]);
+        }
+        else{
+            let value = value & bin[mod + 16];
+        }
+        do Memory.poke(addr, value);
+        return;
+    }
+
+   
+    /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
+    function void drawLine(int x1, int y1, int x2, int y2) {
+        var int a,b,dx,dy, diff, temp, addr;
+        let a = 0;
+        let b = 0;
+        let diff = 0;
+
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+
+        if (dx = 0){
+            if (dy < 0){
+                let temp = y1;
+                let y1 = y2;
+                let y2 = temp;
+            }
+            let a = y1;
+            while (a < y2){
+                do Screen.drawPixel(x1, a);
+                let a = a + 1;
+            }
+            
+            
+        }
+        if (dy = 0){
+            if (dx < 0){
+                let temp = x1;
+                let x1 = x2;
+                let x2 = temp;
+            }
+            
+            let a = x1;
+            while ((a < x2) & ~((15 & a) = 0)){
+                do Screen.drawPixel(a, y1);
+                let a = a + 1;
+            }
+            while ((a + 16) < x2){
+                let addr = (Screen.poewr2(y1, 5)) + (a / 16) + 16384;
+                do Memory.poke(addr, toBlack);
+                let a = a + 16;
+            }
+            
+            while (a < x2){
+                do Screen.drawPixel(a, y1);
+                let a = a + 1;
+            }
+        }
+
+        //  up-left or  up-right
+        if ((dx < 0 & dy < 0) |  (dx > 0 & dy < 0)){
+            let temp = x1;
+            let x1 = x2;
+            let x2 = temp;
+            let temp = y1;
+            let y1 = y2;
+            let y2 = temp;
+            let dx = x2 - x1;
+            let dy = y2 - y1;
+        }
+
+        if (dx > 0 & dy > 0){
+            // dx & dy > 0 down-right
+            while ((~(a > dx)) & (~(b > dy))){
+                do Screen.drawPixel(x1 + a, y1 + b);
+                if (diff < 0){
+                    let a = a + 1;
+                    let diff = diff + dy;
+                }
+                else{
+                    let b = b + 1;
+                    let diff = diff - dx;
+
+                }
+            }
+        }
+
+        if (dx < 0 & dy > 0){
+            // down-left
+            while (~(a < dx) & (~(b > dy))){
+                do Screen.drawPixel(x1 + a, y1 + b);
+                if (diff < 0){
+                    let a = a - 1;
+                    let diff = diff + dy;
+                }
+                else{
+                    let b = b + 1;
+                    let diff = diff + dx;
+
+                }
+            }
+        }
+        return;
+    }
+
+    /** Draws a filled rectangle whose top left corner is (x1, y1)
+     * and bottom right corner is (x2,y2), using the current color. */
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+        var int i;
+        let i = y1;
+        while (i < y2){
+            do Screen.drawLine(x1, i, x2, i);
+            let i = i + 1;
+        }
+        return;
+    }
+
+
+    /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
+    function void drawCircle(int x, int y, int r) {
+        var int dy,powerR,powerDy, sqr;
+        let r = Math.min(r, 181);
+        let dy = -r;
+        while (~(dy = r)){
+            let powerR = r*r;
+            let powerDy = dy*dy;
+            let sqr = Math.sqrt(powerR - powerDy);
+            do Screen.drawLine(x - sqr, y + dy, x + sqr, y + dy);
+            let dy = dy + 1;
+        } 
+        return;
+    }
+    function int poewr2(int toPower, int times){
+        var int i, value;
+        let value = toPower;
+        while (i < times) {
+            let toPower = toPower + toPower;
+            let i = i + 1;
+        }
+        return toPower;
+    }
+}

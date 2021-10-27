@@ -1,0 +1,38 @@
+function Main.main 0
+push constant 0
+pop static 0
+push constant 1
+call Main.startGame 1
+pop temp 0
+call Screen.clearScreen 0
+pop temp 0
+call EndGame.drawEnd 0
+pop temp 0
+push constant 0
+return
+function Main.setToContinue 0
+push constant 0
+not
+pop static 0
+push constant 0
+return
+function Main.startGame 3
+push constant 0
+push constant 1
+call PacMan.new 2
+pop local 0
+push local 0
+push argument 0
+call Board.new 2
+pop local 1
+push local 1
+call PacXon.new 1
+pop local 2
+push local 2
+call PacXon.run 1
+pop temp 0
+push local 2
+call PacXon.dispose 1
+pop temp 0
+push constant 0
+return

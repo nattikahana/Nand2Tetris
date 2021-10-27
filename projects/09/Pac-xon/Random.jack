@@ -1,0 +1,15 @@
+/** Implement a random class. */
+class Random {
+    static int randCounter;
+
+    /** randomize a number in given range. */
+    function int randomizer (int range) {
+        var int rand;
+        let rand = (42 * randCounter) + 666;
+        let rand = Math.max(rand, - rand);
+        let rand = rand - ((rand / 787) * 787);
+        let randCounter = randCounter + rand;
+        let rand = rand - ((rand / range) * range);
+        return rand;
+    }
+}

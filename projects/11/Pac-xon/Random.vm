@@ -1,0 +1,40 @@
+function Random.randomizer 1
+push constant 42
+push static 0
+call Math.multiply 2
+push constant 666
+add
+pop local 0
+push local 0
+push local 0
+neg
+call Math.max 2
+pop local 0
+push local 0
+push local 0
+push constant 787
+call Math.divide 2
+push constant 787
+call Math.multiply 2
+sub
+pop local 0
+push static 0
+push local 0
+add
+pop static 0
+push local 0
+push local 0
+push argument 0
+call Math.divide 2
+push argument 0
+call Math.multiply 2
+sub
+pop local 0
+push local 0
+return
+function Random.x 0
+push constant 67
+call Random.randomizer 1
+pop temp 0
+push constant 0
+return

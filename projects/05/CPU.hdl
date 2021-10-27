@@ -1,0 +1,105 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    //update ARegister and adressM
+    And(a=instruction[5], b=instruction[15], out=ins15andins5);
+    Mux16(a=instruction, b=ALUout, sel=ins15andins5, out=outMux1);
+    Or(a=notins15, b=instruction[5], out=not15or5);
+    ARegister(in=outMux1, load=not15or5, out=a, out[0..14]=addressM);
+
+    Mux16(a=a, b=inM, sel=instruction[12], out=outMux2);
+
+    //checking for the alu instructions 
+    And(a=instruction[11], b=instruction[15], out=tozx);
+    And(a=instruction[10], b=instruction[15], out=tonx);
+    Not(in=instruction[15], out=notins15);
+    Or(a=notins15, b=instruction[9], out=tozy);
+    Or(a=notins15, b=instruction[8], out=tony);
+    And(a=instruction[7], b=instruction[15], out=tof);
+    And(a=instruction[6], b=instruction[15], out=tono);
+
+    ALU(x=d, y=outMux2, zx=tozx, nx=tonx, zy=tozy, ny=tony, f=tof, 
+        no=tono, out=outM, out=ALUout, zr=zr, ng=ng);
+
+    //update DRegister
+    And(a=instruction[4], b=instruction[15], out=toD);
+    DRegister(in=ALUout, load=toD, out=d);
+    And(a=instruction[3], b=instruction[15], out=writeM);
+
+    PC(in=a, load=tojump, inc=true, reset=reset, out[0..14]=pc);
+
+    // prepare for jump
+    Not(in=zr, out=notzr);
+    Not(in=ng, out=notng);
+    And(a=notzr, b=notng, out=positive);
+    Not(in=positive, out=notpositive);
+
+    //checking to jump if greater than 0
+    And(a=positive, b=instruction[0], out=JGT);
+
+    //checking to jump if equal to 0
+    And(a=zr, b=instruction[1], out=JEQ);
+    And(a=instruction[0], b=instruction[1], out=ins0and1);
+
+    //checking to jump if greater or equal to 0
+    And(a=ins0and1, b=notng, out=JGE);
+
+    //checking to jump if less than 0
+    And(a=instruction[2], b=ng, out=JLT);
+
+    //checking to jump if not equal to 0
+    And(a=instruction[0], b=instruction[2], out=ins0and2);
+    And(a=ins0and2, b=notzr, out=JNE);
+
+    //checking to jump if less or equal to 0
+    And(a=instruction[1], b=instruction[2], out=ins1and2);
+    And(a=ins1and2, b=notpositive, out=JLE);
+
+    //checking to jump unconditional
+    And(a=ins0and1, b=instruction[2], out=JMP);
+
+    //checking if jump
+    Or8Way(in[0]=JGT, in[1]= JEQ, in[2]=JGE, in[3]=JLT, in[4]= JNE,
+            in[5]=JLE, in[6]=JMP,in[7]=false, out=jump1);
+
+    //checking finally if jump
+    And(a=instruction[15], b=jump1, out=tojump);
+}

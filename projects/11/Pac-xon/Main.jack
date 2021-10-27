@@ -1,0 +1,34 @@
+/** Initializes a new Pac-Xon game and starts running it. */
+class Main {
+
+    static boolean toContinue;
+    
+    function void main() {
+        let toContinue = false;
+        do Main.startGame(1); 
+        
+        do Screen.clearScreen();
+        do EndGame.drawEnd();
+        return;
+    }
+
+    /** Sets ToContinue to true. */
+    function void setToContinue () {
+        let toContinue = true;
+        return;
+    }
+
+    /** Start all the game. */
+    function void startGame(int level) {
+        var PacMan pac;
+        var Board board;
+        var PacXon game;
+        
+        let pac  = PacMan.new(0,1);
+        let board = Board.new(pac, level);
+        let game = PacXon.new(board);
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}

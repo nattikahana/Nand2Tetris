@@ -1,0 +1,135 @@
+class PacXon {
+    field PacMan pac;
+    field Board board;
+    field String direction;
+    field int life, level; 
+    field boolean end;
+
+    /** Constructs a new PacXon Game. */
+    constructor PacXon new( Board b) {
+        let life = 3;
+        let board = b;
+        let pac = b.getPacman();
+        let direction = null;
+        let end = 0;
+        return this;
+    }
+
+    /** Disposes this game. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+     }
+
+    method boolean cmpString(String str1, String str2){
+        var int i;
+        let i = 0;
+        if (~(str1.length() = str2.length())){
+            return false;
+        }
+        while (i < str1.length()){
+            if (~(str1.charAt(i) = str2.charAt(i))){
+                return false;
+            }
+            let i = i + 1;
+        }
+        return true;
+    }
+
+    /** Moves the Pacman in the current direction. */
+    method void movePacman() {
+        if (cmpString(direction, "Up")) { do board.moveUp(); }
+        if (cmpString(direction, "Down")) { do board.moveDown(); }
+        if (cmpString(direction, "Left")) { do board.moveLeft(); }
+        if (cmpString(direction, "Right")) { do board.moveRight(); }
+        do Sys.wait(100);  // delays the next movement
+        return;
+    }
+
+    /** Moves the Ghost in the current direction. */
+    method void moveGhost() {
+        do board.moveGhost();
+        do Sys.wait(50);  // delays the next movement
+        return;
+    }
+
+    /** Remove a life from the game. */
+    method void removeLife() {
+        var int i;
+        let life = life - 1;
+        do pac.remove();
+        do pac.SetX(0);
+        do pac.SetY(1);
+        do pac.drawRight();
+        let i = 0;
+        do pac.eraseLife(31 - life);
+        do board.setDelete();
+        if (life = 0){
+            let end = true;
+        }
+        return;
+    }
+
+    /** Handle when the user won the game. */
+    method void win(){
+        do Screen.clearScreen();
+        let end = true;
+        return;
+    }
+
+    /** Update to the next level or win the game. */
+    method void nextLevel(){
+        if (board.getLevel() < 3){
+            do board.nextLevel();
+            do Screen.clearScreen();
+            do Sys.wait(200);
+            do Main.setToContinue();
+            let end = true;
+        } 
+        else{
+            do win();
+        }
+        return;
+    }
+    
+
+    /** Runs the game: handles the user's inputs and moves the square accordingly */
+    method void run() {
+        var char key;  // the key currently pressed by the user
+        var boolean exit;
+        let exit = false;
+        
+        while ((~exit) & (~end)) {
+            // waits for a key to be pressed
+            do moveGhost();
+            let key = Keyboard.keyPressed();
+            
+            if (board.getDelete()){
+                do removeLife();
+            }
+            
+            if (board.getSuccess() > 79){
+                do nextLevel();
+            }
+            // waits for the key to be released
+            while ((~(key = 0) | ~(board.TravelState() = 0)) & (~end)) {
+                let key = Keyboard.keyPressed();
+                if (key = 81)  { let exit = true; }     // q key
+                if ((key = 131) & ~(board.TravelState() = 2)) { let direction = "Up"; }   // up arrow
+                if ((key = 133) & ~(board.TravelState() = 1)) { let direction = "Down"; }   // down arrow
+                if ((key = 130) & ~(board.TravelState() = 4)) { let direction = "Left"; }   // left arrow
+                if ((key = 132) & ~(board.TravelState() = 3)) { let direction = "Right"; }   // right arrow
+
+                do movePacman();
+                do moveGhost();
+                if (board.getDelete()){
+                    do removeLife();
+                }
+                let key = 0;
+            }
+        } 
+        
+        do board.dispose();
+        return;
+    }  
+}

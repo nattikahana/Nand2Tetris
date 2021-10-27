@@ -1,0 +1,221 @@
+/** Implements a PacMan. */
+class PacMan {
+   field int x, y; // screen location of the pacman's top-left corner
+
+   /** Constructs a new pacman with a given location. */
+   constructor PacMan new(int Ax, int Ay) {
+      let x = Ax;
+      let y = Ay;
+      do drawRight();
+      return this;
+   }
+
+   /** Disposes this pacman. */
+   method void dispose() {
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Accessors. */
+   method int getX(){ return x; }
+   method int getY(){ return y; }
+
+   /** Seters. */
+   method void SetX(int i){ let x = i; return; }
+   method void SetY(int i){ let y = i; return; }
+
+
+   /** Draws the pacman right on the screen. */
+   method void drawRight() {
+      var int scnAddres;
+      let scnAddres = 16384 + (y * 512) + x;
+      do Memory.poke(scnAddres + 0, 4064);
+      do Memory.poke(scnAddres + 32, 8176);
+      do Memory.poke(scnAddres + 64, 16380);
+      do Memory.poke(scnAddres + 96, 32764);
+      do Memory.poke(scnAddres + 128, 32766);
+      do Memory.poke(scnAddres + 160, 16382);
+      do Memory.poke(scnAddres + 192, 4095);
+      do Memory.poke(scnAddres + 224, 1023);
+      do Memory.poke(scnAddres + 256, 2047);
+      do Memory.poke(scnAddres + 288, 8191);
+      do Memory.poke(scnAddres + 320, 16382);
+      do Memory.poke(scnAddres + 352, 32766);
+      do Memory.poke(scnAddres + 384, 32764);
+      do Memory.poke(scnAddres + 416, 16376);
+      do Memory.poke(scnAddres + 448, 8176);
+      do Memory.poke(scnAddres + 480, 1984);
+      return;
+  }
+
+  /** Draws the pacman down on the screen. */
+  method void drawDown() {
+   var int scnAddres;
+   let scnAddres = 16384 + (y * 512) + x;
+   do Memory.poke(scnAddres + 0, 960);
+   do Memory.poke(scnAddres + 32, 4080);
+   do Memory.poke(scnAddres + 64, 16376);
+   do Memory.poke(scnAddres + 96, 16380);
+   do Memory.poke(scnAddres + 128, 32766);
+   do Memory.poke(scnAddres + 160, -2);
+   do Memory.poke(scnAddres + 192, -1);
+   do Memory.poke(scnAddres + 224, -1);
+   do Memory.poke(scnAddres + 256, -1);
+   do Memory.poke(scnAddres + 288, -1);
+   do Memory.poke(scnAddres + 320, -257);
+   do Memory.poke(scnAddres + 352, -386);
+   do Memory.poke(scnAddres + 384, 31870);
+   do Memory.poke(scnAddres + 416, 15420);
+   do Memory.poke(scnAddres + 448, 6168);
+   do Memory.poke(scnAddres + 480, 0);
+   return;
+   }
+
+   /** Draws the pacman left on the screen. */
+   method void drawLeft() {
+      var int scnAddres;
+      let scnAddres = 16384 + (y * 512) + x;   
+      do Memory.poke(scnAddres + 0, 992);
+      do Memory.poke(scnAddres + 32, 4088);
+      do Memory.poke(scnAddres + 64, 8188);
+      do Memory.poke(scnAddres + 96, 16382);
+      do Memory.poke(scnAddres + 128, 32766);
+      do Memory.poke(scnAddres + 160, 32764);
+      do Memory.poke(scnAddres + 192, -8);
+      do Memory.poke(scnAddres + 224, -32);
+      do Memory.poke(scnAddres + 256, -64);
+      do Memory.poke(scnAddres + 288, -16);
+      do Memory.poke(scnAddres + 320, 32764);
+      do Memory.poke(scnAddres + 352, 32766);
+      do Memory.poke(scnAddres + 384, 16382);
+      do Memory.poke(scnAddres + 416, 16380);
+      do Memory.poke(scnAddres + 448, 4088);
+      do Memory.poke(scnAddres + 480, 2032);
+      return;
+  }
+
+  /** Draws the pacman up on the screen. */
+  method void drawUp() {
+   var int scnAddres;
+   let scnAddres = 16384 + (y * 512) + x;   
+   do Memory.poke(scnAddres + 0, 0);
+   do Memory.poke(scnAddres + 32, 6168);
+   do Memory.poke(scnAddres + 64, 15420);
+   do Memory.poke(scnAddres + 96, 32318);
+   do Memory.poke(scnAddres + 128, 32383);
+   do Memory.poke(scnAddres + 160, -129);
+   do Memory.poke(scnAddres + 192, -1);
+   do Memory.poke(scnAddres + 224, -1);
+   do Memory.poke(scnAddres + 256, -1);
+   do Memory.poke(scnAddres + 288, -1);
+   do Memory.poke(scnAddres + 320, 32767);
+   do Memory.poke(scnAddres + 352, 32766);
+   do Memory.poke(scnAddres + 384, 16380);
+   do Memory.poke(scnAddres + 416, 8188);
+   do Memory.poke(scnAddres + 448, 4080);
+   do Memory.poke(scnAddres + 480, 960);
+   return;
+}
+
+/** removes the pacman on the screen. */
+  method void remove() {
+      var int scnAddres;
+      let scnAddres = 16384 + (y * 512) + x;
+      do Memory.poke(scnAddres + 0, 0);
+      do Memory.poke(scnAddres + 32, 0);
+      do Memory.poke(scnAddres + 64, 0);
+      do Memory.poke(scnAddres + 96, 0);
+      do Memory.poke(scnAddres + 128, 0);
+      do Memory.poke(scnAddres + 160, 0);
+      do Memory.poke(scnAddres + 192, 0);
+      do Memory.poke(scnAddres + 224, 0);
+      do Memory.poke(scnAddres + 256, 0);
+      do Memory.poke(scnAddres + 288, 0);
+      do Memory.poke(scnAddres + 320, 0);
+      do Memory.poke(scnAddres + 352, 0);
+      do Memory.poke(scnAddres + 384, 0);
+      do Memory.poke(scnAddres + 416, 0);
+      do Memory.poke(scnAddres + 448, 0);
+      do Memory.poke(scnAddres + 480, 0);
+      return;
+   }
+
+   /** Erase a life of the pacman right on the screen. */
+   method void eraseLife(int location){
+      var int scnAddres;
+      let scnAddres = 16384 + location;
+      do Memory.poke(scnAddres + 0, 0);
+      do Memory.poke(scnAddres + 32, 0);
+      do Memory.poke(scnAddres + 64, 0);
+      do Memory.poke(scnAddres + 96, 0);
+      do Memory.poke(scnAddres + 128,0);
+      do Memory.poke(scnAddres + 160,0);
+      do Memory.poke(scnAddres + 192,0);
+      do Memory.poke(scnAddres + 224,0);
+      do Memory.poke(scnAddres + 256,0);
+      do Memory.poke(scnAddres + 288,0);
+      do Memory.poke(scnAddres + 320,0);
+      do Memory.poke(scnAddres + 352,0);
+      do Memory.poke(scnAddres + 384,0);
+      do Memory.poke(scnAddres + 416,0);
+      do Memory.poke(scnAddres + 448,0);
+      do Memory.poke(scnAddres + 480,0);
+      return;
+   }
+
+   /** Draws a life of the pacman right on the screen. */
+   method void drawLife(int location){
+      var int scnAddres;
+      let scnAddres = 16384 + location;
+      do Memory.poke(scnAddres + 0, 0);
+      do Memory.poke(scnAddres + 32, 7800);
+      do Memory.poke(scnAddres + 64, 12316);
+      do Memory.poke(scnAddres + 96, 25350);
+      do Memory.poke(scnAddres + 128, -7674);
+      do Memory.poke(scnAddres + 160, 14339);
+      do Memory.poke(scnAddres + 192, 3587);
+      do Memory.poke(scnAddres + 224, 1795);
+      do Memory.poke(scnAddres + 256, 1795);
+      do Memory.poke(scnAddres + 288, 7171);
+      do Memory.poke(scnAddres + 320, 30723);
+      do Memory.poke(scnAddres + 352, -8186);
+      do Memory.poke(scnAddres + 384, 24582);
+      do Memory.poke(scnAddres + 416, 28700);
+      do Memory.poke(scnAddres + 448, 7800);
+      do Memory.poke(scnAddres + 480, 4064);
+      return;
+   }
+
+
+   /** Move the pacman right. */
+   method void moveRight() {
+      do remove();
+      let x = x + 1;
+      do drawRight();
+      return;
+   }
+
+   /** Move the pacman left. */
+   method void moveLeft() {
+      do remove();
+      let x = x - 1;
+      do drawLeft();
+      return;
+   }
+
+      /** Move the pacman up. */
+      method void moveUp() {
+         do remove();
+         let y = y - 1;
+         do drawUp();
+         return;
+      }
+
+      /** Move the pacman down. */
+      method void moveDown() {
+         do remove();
+         let y = y + 1;
+         do drawDown();
+         return;
+      }
+}

@@ -1,0 +1,454 @@
+function PacXon.new 0
+push constant 6
+call Memory.alloc 1
+pop pointer 0
+push constant 3
+pop this 3
+push argument 0
+pop this 1
+push argument 0
+call Board.getPacman 1
+pop this 0
+push constant 0
+pop this 2
+push constant 0
+pop this 5
+push pointer 0
+return
+function PacXon.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function PacXon.cmpString 1
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push argument 1
+call String.length 1
+push argument 2
+call String.length 1
+eq
+not
+not
+if-goto IF_FALSE0
+push constant 0
+return
+goto IF_TRUE0
+label IF_FALSE0
+label IF_TRUE0
+label WHILE_TRUE0
+push local 0
+push argument 1
+call String.length 1
+lt
+not
+if-goto WHILE_FALSE0
+push argument 1
+push local 0
+call String.charAt 2
+push argument 2
+push local 0
+call String.charAt 2
+eq
+not
+not
+if-goto IF_FALSE1
+push constant 0
+return
+goto IF_TRUE1
+label IF_FALSE1
+label IF_TRUE1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_TRUE0
+label WHILE_FALSE0
+push constant 0
+not
+return
+function PacXon.movePacman 0
+push argument 0
+pop pointer 0
+push pointer 0
+push this 2
+push constant 2
+call String.new 1
+push constant 85
+call String.appendChar 2
+push constant 112
+call String.appendChar 2
+call PacXon.cmpString 3
+not
+if-goto IF_FALSE2
+push this 1
+call Board.moveUp 1
+pop temp 0
+goto IF_TRUE2
+label IF_FALSE2
+label IF_TRUE2
+push pointer 0
+push this 2
+push constant 4
+call String.new 1
+push constant 68
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 119
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+call PacXon.cmpString 3
+not
+if-goto IF_FALSE3
+push this 1
+call Board.moveDown 1
+pop temp 0
+goto IF_TRUE3
+label IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push this 2
+push constant 4
+call String.new 1
+push constant 76
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 102
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+call PacXon.cmpString 3
+not
+if-goto IF_FALSE4
+push this 1
+call Board.moveLeft 1
+pop temp 0
+goto IF_TRUE4
+label IF_FALSE4
+label IF_TRUE4
+push pointer 0
+push this 2
+push constant 5
+call String.new 1
+push constant 82
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 103
+call String.appendChar 2
+push constant 104
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+call PacXon.cmpString 3
+not
+if-goto IF_FALSE5
+push this 1
+call Board.moveRight 1
+pop temp 0
+goto IF_TRUE5
+label IF_FALSE5
+label IF_TRUE5
+push constant 100
+call Sys.wait 1
+pop temp 0
+push constant 0
+return
+function PacXon.moveGhost 0
+push argument 0
+pop pointer 0
+push this 1
+call Board.moveGhost 1
+pop temp 0
+push constant 50
+call Sys.wait 1
+pop temp 0
+push constant 0
+return
+function PacXon.removeLife 1
+push argument 0
+pop pointer 0
+push this 3
+push constant 1
+sub
+pop this 3
+push this 0
+call PacMan.remove 1
+pop temp 0
+push this 0
+push constant 0
+call PacMan.SetX 2
+pop temp 0
+push this 0
+push constant 1
+call PacMan.SetY 2
+pop temp 0
+push this 0
+call PacMan.drawRight 1
+pop temp 0
+push constant 0
+pop local 0
+push this 0
+push constant 31
+push this 3
+sub
+call PacMan.eraseLife 2
+pop temp 0
+push this 1
+call Board.setDelete 1
+pop temp 0
+push this 3
+push constant 0
+eq
+not
+if-goto IF_FALSE6
+push constant 0
+not
+pop this 5
+goto IF_TRUE6
+label IF_FALSE6
+label IF_TRUE6
+push constant 0
+return
+function PacXon.win 0
+push argument 0
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 0
+not
+pop this 5
+push constant 0
+return
+function PacXon.nextLevel 0
+push argument 0
+pop pointer 0
+push this 1
+call Board.getLevel 1
+push constant 3
+lt
+not
+if-goto IF_FALSE7
+push this 1
+call Board.nextLevel 1
+pop temp 0
+call Screen.clearScreen 0
+pop temp 0
+push constant 200
+call Sys.wait 1
+pop temp 0
+call Main.setToContinue 0
+pop temp 0
+push constant 0
+not
+pop this 5
+goto IF_TRUE7
+label IF_FALSE7
+push pointer 0
+call PacXon.win 1
+pop temp 0
+label IF_TRUE7
+push constant 0
+return
+function PacXon.run 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 1
+label WHILE_TRUE1
+push local 1
+not
+push this 5
+not
+and
+not
+if-goto WHILE_FALSE1
+push pointer 0
+call PacXon.moveGhost 1
+pop temp 0
+call Keyboard.keyPressed 0
+pop local 0
+push this 1
+call Board.getDelete 1
+not
+if-goto IF_FALSE8
+push pointer 0
+call PacXon.removeLife 1
+pop temp 0
+goto IF_TRUE8
+label IF_FALSE8
+label IF_TRUE8
+push this 1
+call Board.getSuccess 1
+push constant 79
+gt
+not
+if-goto IF_FALSE9
+push pointer 0
+call PacXon.nextLevel 1
+pop temp 0
+goto IF_TRUE9
+label IF_FALSE9
+label IF_TRUE9
+label WHILE_TRUE2
+push local 0
+push constant 0
+eq
+not
+push this 1
+call Board.TravelState 1
+push constant 0
+eq
+not
+or
+push this 5
+not
+and
+not
+if-goto WHILE_FALSE2
+call Keyboard.keyPressed 0
+pop local 0
+push local 0
+push constant 81
+eq
+not
+if-goto IF_FALSE10
+push constant 0
+not
+pop local 1
+goto IF_TRUE10
+label IF_FALSE10
+label IF_TRUE10
+push local 0
+push constant 131
+eq
+push this 1
+call Board.TravelState 1
+push constant 2
+eq
+not
+and
+not
+if-goto IF_FALSE11
+push constant 2
+call String.new 1
+push constant 85
+call String.appendChar 2
+push constant 112
+call String.appendChar 2
+pop this 2
+goto IF_TRUE11
+label IF_FALSE11
+label IF_TRUE11
+push local 0
+push constant 133
+eq
+push this 1
+call Board.TravelState 1
+push constant 1
+eq
+not
+and
+not
+if-goto IF_FALSE12
+push constant 4
+call String.new 1
+push constant 68
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 119
+call String.appendChar 2
+push constant 110
+call String.appendChar 2
+pop this 2
+goto IF_TRUE12
+label IF_FALSE12
+label IF_TRUE12
+push local 0
+push constant 130
+eq
+push this 1
+call Board.TravelState 1
+push constant 4
+eq
+not
+and
+not
+if-goto IF_FALSE13
+push constant 4
+call String.new 1
+push constant 76
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 102
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+pop this 2
+goto IF_TRUE13
+label IF_FALSE13
+label IF_TRUE13
+push local 0
+push constant 132
+eq
+push this 1
+call Board.TravelState 1
+push constant 3
+eq
+not
+and
+not
+if-goto IF_FALSE14
+push constant 5
+call String.new 1
+push constant 82
+call String.appendChar 2
+push constant 105
+call String.appendChar 2
+push constant 103
+call String.appendChar 2
+push constant 104
+call String.appendChar 2
+push constant 116
+call String.appendChar 2
+pop this 2
+goto IF_TRUE14
+label IF_FALSE14
+label IF_TRUE14
+push pointer 0
+call PacXon.movePacman 1
+pop temp 0
+push pointer 0
+call PacXon.moveGhost 1
+pop temp 0
+push this 1
+call Board.getDelete 1
+not
+if-goto IF_FALSE15
+push pointer 0
+call PacXon.removeLife 1
+pop temp 0
+goto IF_TRUE15
+label IF_FALSE15
+label IF_TRUE15
+push constant 0
+pop local 0
+goto WHILE_TRUE2
+label WHILE_FALSE2
+goto WHILE_TRUE1
+label WHILE_FALSE1
+push this 1
+call Board.dispose 1
+pop temp 0
+push constant 0
+return
